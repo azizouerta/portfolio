@@ -3,12 +3,7 @@
 Welcome to my technical portfolio, showcasing my expertise as a Data and Software Engineer specializing in IoT, energy solutions, and scalable data pipelines.
 
 ## Overview
-This repository contains my professional portfolio, highlighting key projects in real-time IoT data processing, embedded systems, and energy optimization. The portfolio is built with HTML and Tailwind CSS and is hosted on GitHub Pages.
-
-## Access the Portfolio
-- **Live Portfolio**: View the portfolio at [https://azizouerta.github.io/portfolio/](https://azizouerta.github.io/portfolio/) (replace with your actual GitHub Pages URL).
-- **PDF Version**: Download the PDF version from [portfolio.pdf](portfolio.pdf) for offline viewing.
-- **Source Code**: The `index.html` file contains the portfolio's source code.
+This repository contains my professional portfolio, highlighting key projects in real-time IoT data processing, embedded systems, and energy optimization. The portfolio is built with HTML and Tailwind CSS.
 
 ## Projects
 The portfolio includes the following projects:
