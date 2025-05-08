@@ -1,0 +1,197 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahmed Aziz Ouertatani - Technical Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Header Section -->
+    <header class="bg-blue-600 text-white py-6">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold">Ahmed Aziz Ouertatani</h1>
+            <p class="mt-2 text-lg">Data Engineer | Systems Engineer | IoT & Energy Solutions</p>
+            <div class="mt-4 flex justify-center space-x-4">
+                <a href="mailto:ahmed.ouertatani.oa@gmail.com" class="hover:underline">ahmed.ouertatani.oa@gmail.com</a>
+                <a href="https://www.linkedin.com/in/ahmed-aziz-ouertatani/" target="_blank" class="hover:underline">LinkedIn</a>
+                <a href="https://github.com/azizouerta" target="_blank" class="hover:underline">GitHub</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-6">About Me</h2>
+            <p class="text-gray-700 max-w-2xl mx-auto text-center">
+                I am a dynamic Data and Software Engineer with over three years of experience designing scalable data pipelines, 
+                cloud-based IoT solutions, and real-time analytics systems. Proficient in Python, AWS, and MQTT, I am passionate 
+                about clean energy and sustainable technology, delivering innovative solutions to optimize energy systems and enhance 
+                data-driven decision-making.
+            </p>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="bg-white py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-6">Skills</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+                <div class="text-center p-4 bg-gray-100 rounded-lg">
+                    <h3 class="font-semibold">Programming Languages</h3>
+                    <p>Python, C++, JavaScript</p>
+                </div>
+                <div class="text-center p-4 bg-gray-100 rounded-lg">
+                    <h3 class="font-semibold">Technologies & Tools</h3>
+                    <p>MQTT, NodeRed, FastAPI, AWS, Docker</p>
+                </div>
+                <div class="text-center p-4 bg-gray-100 rounded-lg">
+                    <h3 class="font-semibold">Databases & Other</h3>
+                    <p>Cassandra, MongoDB, InfluxDB, Grafana, ETL Pipelines, Agile</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-6">Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Project 1: MoonBoard Core -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold">MoonBoard Core</h3>
+                    <p class="text-gray-600 mt-2">
+                        Developed core software for controlling the MoonBoard LED system using an ESP32, supporting Bluetooth and USB 
+                        communication to light predefined LED routes for climbing training.
+                    </p>
+                    <p class="mt-2"><strong>Technologies:</strong> C++, Arduino, ESP32, WS2811/WS2812B LEDs, Bluetooth</p>
+                    <div class="mt-4 flex space-x-4">
+                        <a href="https://github.com/azizouerta/moonboard-core" target="_blank" class="text-blue-600 hover:underline">GitHub</a>
+                    </div>
+                </div>
+                <!-- Project 2: Air-Quality-Data-Collection -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold">Air Quality Data Collection</h3>
+                    <p class="text-gray-600 mt-2">
+                        Built an MQTT subscriber script to fetch and process real-time air quality data from Aranet meters in two buildings, 
+                        storing it in a Cassandra database using pandas DataFrames with 5-minute resolution.
+                    </p>
+                    <p class="mt-2"><strong>Technologies:</strong> Python, MQTT, pandas, Cassandra</p>
+                    <div class="mt-4 flex space-x-4">
+                        <a href="https://github.com/azizouerta/air-quality-data-collection" target="_blank" class="text-blue-600 hover:underline">GitHub</a>
+                    </div>
+                </div>
+                <!-- Project 3: EV-Data-Collection -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold">EV Data Collection</h3>
+                    <p class="text-gray-600 mt-2">
+                        Created an MQTT subscriber script to collect and process real-time EV charging data from Shelly meters in Building A, 
+                        converting it to pandas DataFrames and storing in a Cassandra database.
+                    </p>
+                    <p class="mt-2"><strong>Technologies:</strong> Python, MQTT, pandas, Cassandra</p>
+                    <div class="mt-4 flex space-x-4">
+                        <a href="https://github.com/azizouerta/ev-data-collection" target="_blank" class="text-blue-600 hover:underline">GitHub</a>
+                    </div>
+                </div>
+                <!-- Project 4: EV Charging and Billing System -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold">EV Charging and Billing System</h3>
+                    <p class="text-gray-600 mt-2">
+                        Designed a Python script to manage charging and billing for 5 EVs across 3 ports over 6 days, optimizing energy delivery 
+                        and calculating costs based on hourly prices and SoC targets.
+                    </p>
+                    <p class="mt-2"><strong>Technologies:</strong> Python, pandas, NumPy</p>
+                    <div class="mt-4 flex space-x-4">
+                        <a href="https://github.com/azizouerta/ev-charging-billing" target="_blank" class="text-blue-600 hover:underline">GitHub</a>
+                    </div>
+                </div>
+                <!-- Project 5: GreenHeat Backend -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold">GreenHeat Backend</h3>
+                    <p class="text-gray-600 mt-2">
+                        Developed a Flask-based backend for GreenHeat, fetching weather data via OpenMeteo API and serving it through a REST API, 
+                        deployable with Docker.
+                    </p>
+                    <p class="mt-2"><strong>Technologies:</strong> Python, Flask, Docker, REST API, OpenMeteo</p>
+                    <div class="mt-4 flex space-x-4">
+                        <a href="https://github.com/azizouerta/greenheat-backend" target="_blank" class="text-blue-600 hover:underline">GitHub</a>
+                    </div>
+                </div>
+                <!-- Project 6: GreenHeat Frontend -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold">GreenHeat Frontend</h3>
+                    <p class="text-gray-600 mt-2">
+                        Contributed to a React-based frontend for GreenHeat, displaying weather data for district heating optimization, 
+                        with Docker support for deployment.
+                    </p>
+                    <p class="mt-2"><strong>Technologies:</strong> React, JavaScript, Node.js, Docker</p>
+                    <div class="mt-4 flex space-x-4">
+                        <a href="https://github.com/azizouerta/greenheat-frontend" target="_blank" class="text-blue-600 hover:underline">GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="bg-blue-600 text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-2xl font-bold mb-6">Get in Touch</h2>
+            <p class="max-w-xl mx-auto">
+                Interested in collaborating or learning more about my work? Feel free to reach out!
+            </p>
+            <a href="mailto:ahmed.ouertatani.oa@gmail.com" class="mt-4 inline-block bg-white text-blue-600 px-6 py-2 rounded-full hover:bg-gray-200">
+                Contact Me
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2025 Ahmed Aziz Ouertatani. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
